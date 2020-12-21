@@ -45,3 +45,4 @@ SELECT country_mark, count(*) as kolvo
 from auto.mark
 GROUP BY country_mark kolvo;
 
+------
