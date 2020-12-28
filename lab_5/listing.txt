@@ -1,0 +1,62 @@
+package sample.ConnectToDB;
+
+public class ConfigConnect {
+    protected String dbHost = "127.0.0.1";
+    protected String dbPort = "3306";
+    protected String dbUser = "root";
+    protected String dbPassword = "root";
+    protected String dbName = "car";
+}
+
+
+package sample.ConnectToDB;
+
+
+import java.sql.*;
+
+public class DataBaseHandler extends ConfigConnect{
+    Connection dbConnection;
+
+    public Connection getDbConnection() throws ClassNotFoundException, SQLException {
+
+        String connectionString ="jdbc:mysql://" + dbHost + ":" + dbPort +"/" + dbName + "?" + "useSSL=true&verifyServerCertificate=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        dbConnection = DriverManager.getConnection(connectionString,dbUser,dbPassword);
+
+        return dbConnection;
+    }
+
+
+public ResultSet getEngine(Engine engine){
+    ResultSet resSet = null;
+
+    String select = "SELECT * FROM engine WHERE engineId =?";
+
+    try {
+        PreparedStatement prSt = getDbConnection().prepareStatement(select);
+        prSt.setString(1,engine.getEngine());
+        resSet = prSt.executeQuery();
+    }catch (SQLException e){
+        e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+
+    return resSet;
+}
+
+
+public void reqDeleteEngine(Engine engine){
+    try {
+        String delete = "DELETE FROM engine WHERE engineId =?";
+        PreparedStatement prSt = getDbConnection().prepareStatement(delete);
+        prSt.setString(1,engine.getEngine());
+        prSt.executeUpdate();
+    }catch (SQLException e){
+        e.printStackTrace();
+    }catch (ClassNotFoundException e){
+        e.printStackTrace();
+    }
+}
